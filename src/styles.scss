@@ -1,1 +1,127 @@
-/* You can add global styles to this file, and also import other style files */
+:root,
+[data-theme='dark'] {
+  /* Core Brand Palette */
+  --gk-primary: #ffbf00;
+  --gk-primary-hover: #ffd03b;
+  --gk-primary-glow: rgba(255, 191, 0, 0.28);
+
+  --gk-secondary: #e83f6f;
+  --gk-secondary-hover: #f25c86;
+  --gk-secondary-glow: rgba(232, 63, 111, 0.28);
+
+  --gk-tertiary: #2274a5;
+  --gk-tertiary-light: #3694cd;
+  --gk-tertiary-glow: rgba(34, 116, 165, 0.32);
+
+  --gk-accent: #32936f;
+  --gk-accent-light: #43b58b;
+  --gk-accent-glow: rgba(50, 147, 111, 0.28);
+
+  --gk-white: #ffffff;
+
+  /* Derived Dark Mode Surfaces (Tinted from #2274A5) */
+  --gk-bg-base: #09111e;
+  --gk-bg-elevated: #111e32;
+  --gk-bg-card: rgba(17, 30, 50, 0.82);
+  --gk-bg-glass: rgba(9, 17, 30, 0.85);
+  --gk-bg-input: #0d1726;
+
+  /* Typography & Borders */
+  --gk-text-main: #ffffff;
+  --gk-text-muted: #9cb3c9;
+  --gk-text-inverse: #09111e;
+  --gk-border: rgba(34, 116, 165, 0.28);
+  --gk-border-strong: rgba(255, 191, 0, 0.55);
+  --gk-shadow: 0 14px 34px -8px rgba(4, 9, 18, 0.65);
+}
+
+[data-theme='light'] {
+  /* Core Brand Palette remains consistent */
+  --gk-primary: #ffbf00;
+  --gk-primary-hover: #e5ab00;
+  --gk-primary-glow: rgba(255, 191, 0, 0.25);
+
+  --gk-secondary: #e83f6f;
+  --gk-secondary-hover: #d42c5c;
+  --gk-secondary-glow: rgba(232, 63, 111, 0.2);
+
+  --gk-tertiary: #2274a5;
+  --gk-tertiary-light: #1b5d85;
+  --gk-tertiary-glow: rgba(34, 116, 165, 0.18);
+
+  --gk-accent: #32936f;
+  --gk-accent-light: #267859;
+  --gk-accent-glow: rgba(50, 147, 111, 0.2);
+
+  --gk-white: #ffffff;
+
+  /* Derived Light Mode Surfaces (Anchored on #FFFFFF) */
+  --gk-bg-base: #f4f8fb;
+  --gk-bg-elevated: #ffffff;
+  --gk-bg-card: #ffffff;
+  --gk-bg-glass: rgba(255, 255, 255, 0.88);
+  --gk-bg-input: #eaf1f7;
+
+  /* Typography & Borders */
+  --gk-text-main: #0c1829;
+  --gk-text-muted: #4a6580;
+  --gk-text-inverse: #09111e;
+  --gk-border: rgba(34, 116, 165, 0.2);
+  --gk-border-strong: #2274a5;
+  --gk-shadow: 0 12px 28px -6px rgba(34, 116, 165, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family:
+    'Plus Jakarta Sans',
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--gk-bg-base);
+  background-image:
+    radial-gradient(circle at 12% 10%, var(--gk-tertiary-glow), transparent 36%),
+    radial-gradient(circle at 88% 14%, var(--gk-secondary-glow), transparent 32%),
+    radial-gradient(circle at 50% 92%, var(--gk-accent-glow), transparent 38%);
+  background-attachment: fixed;
+  color: var(--gk-text-main);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gk-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gk-tertiary);
+  border-radius: 999px;
+  border: 2px solid var(--gk-bg-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gk-primary);
+}

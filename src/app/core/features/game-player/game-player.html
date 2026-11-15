@@ -1,0 +1,176 @@
+@if (game(); as g) {
+  <section class="player-shell">
+    <header class="player-bar">
+      <a [routerLink]="['/category', g.category]" class="back-btn"> ← {{ g.category }} Catalog </a>
+
+      <div class="title-block">
+        <span class="cat-pill">{{ g.category }}</span>
+        <h1>{{ g.title }}</h1>
+      </div>
+
+      <div class="telemetry">
+        <div class="stat">
+          <span>SCORE</span>
+          <strong>{{ score() }}</strong>
+        </div>
+        <div class="stat best">
+          <span>BEST</span>
+          <strong>{{ highScore() }}</strong>
+        </div>
+        <button
+          type="button"
+          class="btn-audio"
+          [class.muted]="!soundService.isEnabled()"
+          (click)="toggleAudio()"
+          [attr.aria-label]="
+            soundService.isEnabled() ? 'Mute sound effects' : 'Unmute sound effects'
+          "
+        >
+          {{ soundService.isEnabled() ? '🔊 SFX On' : '🔇 Muted' }}
+        </button>
+        <button type="button" class="btn-reset" (click)="initCurrentGame()">↻ Restart</button>
+      </div>
+    </header>
+
+    <p class="game-desc">
+      {{ g.description }}
+      <span class="diff-chip">{{ g.difficulty }} Mode</span>
+    </p>
+
+    <!-- CATEGORY 1: ARCADE ENGINE (HTML5 Canvas) -->
+    @if (g.category === 'arcade') {
+      <div class="canvas-stage">
+        <canvas
+          #arcadeCanvas
+          width="520"
+          height="360"
+          tabindex="0"
+          (keydown)="onArcadeKey($event)"
+        ></canvas>
+        <div class="touch-dpad">
+          <button type="button" (click)="setDirection(0, -1)">▲</button>
+          <button type="button" (click)="setDirection(-1, 0)">◀</button>
+          <button type="button" (click)="setDirection(1, 0)">▶</button>
+          <button type="button" (click)="setDirection(0, 1)">▼</button>
+        </div>
+      </div>
+    }
+
+    <!-- CATEGORY 2: PUZZLE ENGINE (Sliding Matrix & Lights Out) -->
+    @if (g.category === 'puzzle') {
+      <div class="board-stage">
+        <div
+          class="puzzle-grid"
+          [style.grid-template-columns]="'repeat(' + puzzleGridSize() + ', 1fr)'"
+        >
+          @for (cell of puzzleCells(); track $index) {
+            <button
+              type="button"
+              class="puzzle-tile"
+              [class.empty]="cell === 0 && g.engineConfig['mode'] === 'slide'"
+              [class.lit]="cell === 1 && g.engineConfig['mode'] === 'lightsout'"
+              (click)="onPuzzleTileClick($index)"
+            >
+              @if (g.engineConfig['mode'] === 'slide' && cell !== 0) {
+                {{ cell }}
+              } @else if (g.engineConfig['mode'] === 'lightsout') {
+                {{ cell === 1 ? '⚡' : '·' }}
+              }
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- CATEGORY 3: TRIVIA & WORD ENGINE -->
+    @if (g.category === 'trivia') {
+      <div class="trivia-stage">
+        <div class="prompt-card">
+          <span class="streak-tag">🔥 Multiplier Streak: {{ triviaStreak() }}x</span>
+          <h2>{{ triviaPrompt() }}</h2>
+        </div>
+        <div class="options-grid">
+          @for (opt of triviaOptions(); track opt) {
+            <button type="button" class="option-btn" (click)="answerTrivia(opt)">
+              {{ opt }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- CATEGORY 4: CARD & BOARD ENGINE -->
+    @if (g.category === 'board') {
+      <div class="board-stage">
+        @if (g.engineConfig['mode'] === 'tictactoe') {
+          <div class="ttt-grid">
+            @for (cell of tttBoard(); track $index) {
+              <button type="button" class="ttt-cell" (click)="playTicTacToe($index)">
+                {{ cell }}
+              </button>
+            }
+          </div>
+          <p class="status-banner">{{ boardStatus() }}</p>
+        }
+
+        @if (g.engineConfig['mode'] === 'memory') {
+          <div class="memory-grid">
+            @for (card of memoryDeck(); track $index) {
+              <button
+                type="button"
+                class="mem-card"
+                [class.revealed]="card.revealed || card.matched"
+                (click)="flipMemoryCard($index)"
+              >
+                {{ card.revealed || card.matched ? card.icon : '?' }}
+              </button>
+            }
+          </div>
+        }
+
+        @if (g.engineConfig['mode'] === 'highlow') {
+          <div class="highlow-box">
+            <div class="playing-card">{{ currentCard() }}</div>
+            <div class="hl-actions">
+              <button type="button" class="btn-secondary" (click)="guessHighLow('lower')">
+                ▼ Lower
+              </button>
+              <button type="button" class="btn-primary" (click)="guessHighLow('higher')">
+                ▲ Higher
+              </button>
+            </div>
+            <p class="status-banner">{{ boardStatus() }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- CATEGORY 5: STRATEGY & IDLE SIMULATOR ENGINE -->
+    @if (g.category === 'strategy') {
+      <div class="strategy-stage">
+        <div class="resource-hub">
+          <h3>{{ idleUnits() }} {{ g.engineConfig['unitName'] }}s Operational</h3>
+          <p class="rate-line">+{{ idleRate() }} {{ g.engineConfig['resourceName'] }} / sec</p>
+          <div class="action-buttons">
+            <button type="button" class="harvest-btn" (click)="manualHarvest()">
+              ⚡ Harvest +{{ idleClickPower() }} {{ g.engineConfig['resourceName'] }}
+            </button>
+            <button
+              type="button"
+              class="upgrade-btn"
+              [disabled]="score() < idleNextCost()"
+              (click)="buyStrategyUnit()"
+            >
+              🚀 Deploy {{ g.engineConfig['unitName'] }} (Cost: {{ idleNextCost() }})
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <h2>Initializing GameKit Engine...</h2>
+    <a routerLink="/category/all">Return to Catalog</a>
+  </div>
+}

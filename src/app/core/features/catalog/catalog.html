@@ -1,0 +1,80 @@
+<section class="hero-banner">
+  <div class="hero-copy">
+    <span class="hero-kicker">⚡ ZERO-INSTALL HTML5 ENGINES</span>
+    <h1>{{ activeTitle() }}</h1>
+    <p>
+      Showing <strong>{{ visibleGames().length }}</strong> of
+      <strong>{{ filteredGames().length }}</strong> playable browser mini-games with automatic
+      session sync.
+    </p>
+  </div>
+
+  <div class="controls-bar">
+    <div class="difficulty-pills" role="group" aria-label="Filter by difficulty">
+      @for (level of ['All', 'Easy', 'Medium', 'Hard']; track level) {
+        <button
+          type="button"
+          class="diff-pill"
+          [class.active]="selectedDifficulty() === level"
+          (click)="setDifficulty($any(level))"
+        >
+          {{ level }}
+        </button>
+      }
+    </div>
+
+    <div class="search-box">
+      <input
+        type="search"
+        placeholder="Search games by title, mechanic, or genre..."
+        [value]="searchQuery()"
+        (input)="onSearch($event)"
+        aria-label="Search games"
+      />
+    </div>
+  </div>
+</section>
+
+<div class="games-grid">
+  @for (game of visibleGames(); track game.id) {
+    @defer (on viewport) {
+      <article class="game-card" [attr.data-category]="game.category">
+        <div class="card-glow-bar"></div>
+        <div class="card-top">
+          <span class="badge-cat">{{ game.category }}</span>
+          <span
+            class="badge-diff"
+            [class.easy]="game.difficulty === 'Easy'"
+            [class.medium]="game.difficulty === 'Medium'"
+            [class.hard]="game.difficulty === 'Hard'"
+          >
+            {{ game.difficulty }}
+          </span>
+        </div>
+
+        <h2>{{ game.title }}</h2>
+        <p>{{ game.description }}</p>
+
+        <div class="card-footer">
+          @let progress = progressMap()[game.id];
+          @if (progress) {
+            <span class="saved-score achieved"> ★ Best: {{ progress.highScore }} </span>
+          } @else {
+            <span class="saved-score">Unplayed</span>
+          }
+          <a [routerLink]="['/play', game.slug]" class="play-btn"> Launch Game → </a>
+        </div>
+      </article>
+    } @placeholder {
+      <div class="card-skeleton">Loading {{ game.title }}...</div>
+    }
+  }
+</div>
+
+@if (hasMore()) {
+  <div class="load-more-wrap">
+    <button type="button" class="load-more-btn" (click)="loadMore()">
+      Explore More Games ({{ filteredGames().length - visibleGames().length }} remaining)
+    </button>
+  </div>
+}

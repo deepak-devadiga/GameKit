@@ -1,0 +1,291 @@
+.hero-banner {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 116, 165, 0.22) 0%,
+    rgba(232, 63, 111, 0.14) 55%,
+    rgba(50, 147, 111, 0.18) 100%
+  );
+  border: 1px solid var(--gk-border);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  box-shadow: var(--gk-shadow);
+}
+
+.hero-copy {
+  max-width: 620px;
+
+  .hero-kicker {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--gk-primary);
+    background: rgba(255, 191, 0, 0.14);
+    border: 1px solid rgba(255, 191, 0, 0.35);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-transform: capitalize;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    color: var(--gk-text-muted);
+    font-size: 0.98rem;
+
+    strong {
+      color: var(--gk-primary);
+    }
+  }
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.difficulty-pills {
+  display: flex;
+  background: var(--gk-bg-input);
+  padding: 0.28rem;
+  border-radius: 12px;
+  border: 1px solid var(--gk-border);
+  gap: 0.25rem;
+
+  .diff-pill {
+    background: transparent;
+    border: none;
+    color: var(--gk-text-muted);
+    padding: 0.45rem 0.85rem;
+    border-radius: 9px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &.active {
+      background: var(--gk-tertiary);
+      color: var(--gk-white);
+    }
+  }
+}
+
+.search-box input {
+  width: 310px;
+  max-width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--gk-border);
+  background: var(--gk-bg-input);
+  color: var(--gk-text-main);
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--gk-primary);
+    box-shadow: 0 0 0 3px var(--gk-primary-glow);
+  }
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  gap: 1.35rem;
+}
+
+.game-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--gk-bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gk-border);
+  border-radius: 18px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--gk-shadow);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  .card-glow-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gk-primary), var(--gk-secondary), var(--gk-tertiary));
+  }
+
+  &[data-category='arcade'] .card-glow-bar {
+    background: linear-gradient(90deg, var(--gk-secondary), var(--gk-primary));
+  }
+
+  &[data-category='puzzle'] .card-glow-bar {
+    background: linear-gradient(90deg, var(--gk-tertiary), var(--gk-accent));
+  }
+
+  &[data-category='trivia'] .card-glow-bar {
+    background: linear-gradient(90deg, var(--gk-primary), var(--gk-accent));
+  }
+
+  &[data-category='board'] .card-glow-bar {
+    background: linear-gradient(90deg, var(--gk-accent), var(--gk-tertiary));
+  }
+
+  &[data-category='strategy'] .card-glow-bar {
+    background: linear-gradient(90deg, var(--gk-tertiary), var(--gk-secondary));
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--gk-primary);
+    box-shadow: 0 16px 36px -10px var(--gk-primary-glow);
+  }
+
+  h2 {
+    margin: 0.85rem 0 0.45rem;
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: var(--gk-text-main);
+  }
+
+  p {
+    color: var(--gk-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    margin: 0;
+  }
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+
+  .badge-cat {
+    color: var(--gk-tertiary-light);
+    background: rgba(34, 116, 165, 0.16);
+    padding: 0.22rem 0.6rem;
+    border-radius: 6px;
+  }
+
+  .badge-diff {
+    padding: 0.22rem 0.6rem;
+    border-radius: 6px;
+
+    &.easy {
+      background: rgba(50, 147, 111, 0.18);
+      color: var(--gk-accent-light);
+    }
+
+    &.medium {
+      background: rgba(255, 191, 0, 0.18);
+      color: var(--gk-primary);
+    }
+
+    &.hard {
+      background: rgba(232, 63, 111, 0.18);
+      color: var(--gk-secondary);
+    }
+  }
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid var(--gk-border);
+}
+
+.saved-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--gk-text-muted);
+  font-weight: 600;
+
+  &.achieved {
+    color: var(--gk-primary);
+    font-weight: 800;
+  }
+}
+
+.play-btn {
+  background: var(--gk-primary);
+  color: var(--gk-text-inverse);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.84rem;
+  transition: all 0.18s ease;
+
+  &:hover {
+    background: var(--gk-secondary);
+    color: var(--gk-white);
+    box-shadow: 0 4px 14px var(--gk-secondary-glow);
+  }
+}
+
+.card-skeleton {
+  height: 220px;
+  border-radius: 18px;
+  background: var(--gk-bg-card);
+  border: 1px solid var(--gk-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gk-text-muted);
+}
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 2.5rem 0 1rem;
+}
+
+.load-more-btn {
+  background: var(--gk-tertiary);
+  color: var(--gk-white);
+  border: 1px solid var(--gk-tertiary-light);
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--gk-tertiary-glow);
+  transition: all 0.18s ease;
+
+  &:hover {
+    background: var(--gk-primary);
+    color: var(--gk-text-inverse);
+    border-color: var(--gk-primary);
+  }
+}

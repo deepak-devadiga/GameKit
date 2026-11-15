@@ -1,0 +1,27 @@
+{
+  "appName": "GameKit",
+  "version": "22.1.0",
+  "seo": {
+    "defaultTitle": "GameKit — Play Instant Browser Mini-Games",
+    "titleTemplate": "%s | GameKit Arcade",
+    "defaultDescription": "Play thousands of instant, zero-install HTML5 mini-games across Arcade, Puzzle, Trivia, Card & Board, and Strategy categories with automatic progress saving.",
+    "canonicalBaseUrl": "https://deepak-devadiga.github.io/GameKit",
+    "ogImage": "https://deepak-devadiga.github.io/GameKit/assets/og-banner.png"
+  },
+  "features": {
+    "enableSoundEffects": true,
+    "enableHighContrastMode": false,
+    "autoSaveIntervalMs": 5000
+  },
+  "security": {
+    "storageKeyPrefix": "gk_v22_",
+    "enableChecksumValidation": true,
+    "hmacSalt": "gk-2026-client-integrity-salt-99482",
+    "maxSessionAgeMinutes": 10080
+  },
+  "ui": {
+    "defaultTheme": "dark",
+    "cardsPerPage": 60,
+    "showTelemetryFps": true
+  }
+}

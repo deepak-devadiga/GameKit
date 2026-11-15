@@ -1,0 +1,6 @@
+{
+  "hosting": {
+    "public": "dist/gamekit/browser",
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}

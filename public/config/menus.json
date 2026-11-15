@@ -1,0 +1,51 @@
+{
+  "headerMenus": [
+    {
+      "id": "nav-all",
+      "label": "All Games",
+      "route": "/category/all",
+      "icon": "grid",
+      "badge": "1000"
+    },
+    {
+      "id": "nav-arcade",
+      "label": "Arcade",
+      "route": "/category/arcade",
+      "icon": "joystick"
+    },
+    {
+      "id": "nav-puzzle",
+      "label": "Puzzle",
+      "route": "/category/puzzle",
+      "icon": "puzzle"
+    },
+    {
+      "id": "nav-trivia",
+      "label": "Trivia & Word",
+      "route": "/category/trivia",
+      "icon": "brain"
+    },
+    {
+      "id": "nav-board",
+      "label": "Card & Board",
+      "route": "/category/board",
+      "icon": "spade"
+    },
+    {
+      "id": "nav-strategy",
+      "label": "Strategy & Idle",
+      "route": "/category/strategy",
+      "icon": "castle"
+    }
+  ],
+  "footerLinks": [
+    {
+      "label": "Privacy & Local Storage",
+      "route": "/category/all"
+    },
+    {
+      "label": "Security Architecture",
+      "route": "/category/all"
+    }
+  ]
+}
