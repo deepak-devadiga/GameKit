@@ -19,11 +19,11 @@
 
   --gk-white: #ffffff;
 
-  /* Derived Dark Mode Surfaces (Tinted from #2274A5) */
+  /* Derived Dark Mode Surfaces */
   --gk-bg-base: #09111e;
   --gk-bg-elevated: #111e32;
-  --gk-bg-card: rgba(17, 30, 50, 0.82);
-  --gk-bg-glass: rgba(9, 17, 30, 0.85);
+  --gk-bg-card: rgba(17, 30, 50, 0.84);
+  --gk-bg-glass: rgba(9, 17, 30, 0.88);
   --gk-bg-input: #0d1726;
 
   /* Typography & Borders */
@@ -33,10 +33,13 @@
   --gk-border: rgba(34, 116, 165, 0.28);
   --gk-border-strong: rgba(255, 191, 0, 0.55);
   --gk-shadow: 0 14px 34px -8px rgba(4, 9, 18, 0.65);
+
+  /* Fluid Responsive Spacing */
+  --gk-pad-page: clamp(0.85rem, 2.5vw, 2rem);
+  --gk-radius-lg: clamp(14px, 2vw, 22px);
 }
 
 [data-theme='light'] {
-  /* Core Brand Palette remains consistent */
   --gk-primary: #ffbf00;
   --gk-primary-hover: #e5ab00;
   --gk-primary-glow: rgba(255, 191, 0, 0.25);
@@ -55,14 +58,12 @@
 
   --gk-white: #ffffff;
 
-  /* Derived Light Mode Surfaces (Anchored on #FFFFFF) */
   --gk-bg-base: #f4f8fb;
   --gk-bg-elevated: #ffffff;
   --gk-bg-card: #ffffff;
-  --gk-bg-glass: rgba(255, 255, 255, 0.88);
+  --gk-bg-glass: rgba(255, 255, 255, 0.9);
   --gk-bg-input: #eaf1f7;
 
-  /* Typography & Borders */
   --gk-text-main: #0c1829;
   --gk-text-muted: #4a6580;
   --gk-text-inverse: #09111e;
@@ -75,6 +76,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -82,6 +84,8 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
   font-family:
     'Plus Jakarta Sans',
     'Inter',
@@ -102,14 +106,15 @@ body {
 }
 
 button,
+a,
 input {
   font-family: inherit;
+  touch-action: manipulation;
 }
 
-/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -119,7 +124,6 @@ input {
 ::-webkit-scrollbar-thumb {
   background: var(--gk-tertiary);
   border-radius: 999px;
-  border: 2px solid var(--gk-bg-base);
 }
 
 ::-webkit-scrollbar-thumb:hover {

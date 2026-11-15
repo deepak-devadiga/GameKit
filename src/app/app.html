@@ -1,15 +1,85 @@
 <div class="app-layout">
   <header class="topbar">
-    <div class="brand">
-      <a routerLink="/category/all" class="logo-link" aria-label="GameKit Home">
-        <span class="logo-gem" aria-hidden="true"></span>
-        <h1>{{ title() }}</h1>
-      </a>
+    <div class="topbar-main">
+      <div class="brand">
+        <a
+          routerLink="/category/all"
+          class="logo-link"
+          aria-label="GameKit Home"
+          (click)="closeMobileMenu()"
+        >
+          <span class="logo-gem" aria-hidden="true"></span>
+          <h1>{{ title() }}</h1>
+        </a>
+      </div>
+
+      <!-- Desktop & Large Tablet Navigation -->
+      <nav class="main-nav desktop-nav" aria-label="Game Categories">
+        @for (item of menus(); track item.id) {
+          <a [routerLink]="item.route" routerLinkActive="active-link" class="nav-item">
+            <span>{{ item.label }}</span>
+            @if (item.badge) {
+              <small class="nav-badge">{{ item.badge }}</small>
+            }
+          </a>
+        }
+      </nav>
+
+      <div class="session-panel">
+        <div class="score-pill" title="Verified local session score">
+          <span class="pill-item">
+            <small>SCORE</small>
+            <strong>{{ totalHighScore() }}</strong>
+          </span>
+          <span class="divider"></span>
+          <span class="pill-item">
+            <small>PLAYED</small>
+            <strong class="emerald-text">{{ gamesPlayedCount() }}</strong>
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="btn-theme"
+          (click)="toggleTheme()"
+          [attr.aria-label]="
+            'Switch to ' + (themeService.currentTheme() === 'dark' ? 'light' : 'dark') + ' theme'
+          "
+        >
+          <span class="theme-icon">{{ themeService.currentTheme() === 'dark' ? '☀️' : '🌙' }}</span>
+          <span class="theme-label">{{
+            themeService.currentTheme() === 'dark' ? 'Light' : 'Dark'
+          }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="btn-hamburger"
+          [class.is-open]="mobileMenuOpen()"
+          (click)="toggleMobileMenu()"
+          [attr.aria-expanded]="mobileMenuOpen()"
+          aria-label="Toggle category menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
 
-    <nav class="main-nav" aria-label="Game Categories">
+    <!-- Mobile & Tablet Horizontal Quick-Scroll Strip + Collapsible Drawer -->
+    <nav
+      class="mobile-nav-drawer"
+      [class.open]="mobileMenuOpen()"
+      aria-label="Mobile Game Categories"
+    >
       @for (item of menus(); track item.id) {
-        <a [routerLink]="item.route" routerLinkActive="active-link" class="nav-item">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active-link"
+          class="nav-item"
+          (click)="closeMobileMenu()"
+        >
           <span>{{ item.label }}</span>
           @if (item.badge) {
             <small class="nav-badge">{{ item.badge }}</small>
@@ -17,31 +87,6 @@
         </a>
       }
     </nav>
-
-    <div class="session-panel">
-      <div class="score-pill" title="Verified local session score">
-        <span class="pill-item">
-          <small>SCORE</small>
-          <strong>{{ totalHighScore() }}</strong>
-        </span>
-        <span class="divider"></span>
-        <span class="pill-item">
-          <small>PLAYED</small>
-          <strong class="emerald-text">{{ gamesPlayedCount() }}</strong>
-        </span>
-      </div>
-
-      <button
-        type="button"
-        class="btn-theme"
-        (click)="toggleTheme()"
-        [attr.aria-label]="
-          'Switch to ' + (themeService.currentTheme() === 'dark' ? 'light' : 'dark') + ' theme'
-        "
-      >
-        {{ themeService.currentTheme() === 'dark' ? '☀️ Light' : '🌙 Dark' }}
-      </button>
-    </div>
   </header>
 
   <main class="main-viewport">
