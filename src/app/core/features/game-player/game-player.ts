@@ -14,6 +14,7 @@ import { ConfigService } from '../../services/config.service';
 import { StorageAuthService } from '../../services/storage-auth.service';
 import { SeoService } from '../../services/seo.service';
 import { SoundService } from '../../services/sound.service';
+import { SupportPromptService } from '../../services/support-prompt.service';
 
 @Component({
   selector: 'app-game-player',
@@ -28,6 +29,7 @@ export class GamePlayerComponent implements OnDestroy {
   private readonly storageService = inject(StorageAuthService);
   private readonly seoService = inject(SeoService);
   protected readonly soundService = inject(SoundService);
+  private readonly supportPrompt = inject(SupportPromptService);
 
   readonly arcadeCanvas = viewChild<ElementRef<HTMLCanvasElement>>('arcadeCanvas');
 
@@ -161,7 +163,7 @@ export class GamePlayerComponent implements OnDestroy {
         };
         if (this.snake.some((s) => s.x === head.x && s.y === head.y)) {
           this.soundService.play('error');
-          this.persistProgress();
+          this.notifyGameCompleted();
           this.snake = [
             { x: 5, y: 5 },
             { x: 4, y: 5 },
@@ -306,6 +308,7 @@ export class GamePlayerComponent implements OnDestroy {
       if (cells.every((c) => c === 1)) {
         this.soundService.play('victory');
         this.addScore(200);
+        this.notifyGameCompleted();
       } else {
         this.soundService.play('move');
       }
@@ -404,6 +407,9 @@ export class GamePlayerComponent implements OnDestroy {
       this.soundService.play('success');
       this.addScore(25 * nextStreak);
     } else {
+      if (this.triviaStreak() >= 3) {
+        this.notifyGameCompleted();
+      }
       this.triviaStreak.set(0);
       this.soundService.play('error');
     }
@@ -491,6 +497,7 @@ export class GamePlayerComponent implements OnDestroy {
         this.addScore(40);
         if (deck.every((c) => c.matched)) {
           this.soundService.play('victory');
+          this.notifyGameCompleted();
         } else {
           this.soundService.play('success');
         }
@@ -549,6 +556,16 @@ export class GamePlayerComponent implements OnDestroy {
     const next = this.score() + points;
     this.score.set(next);
     this.persistProgress(savedState);
+  }
+
+  private notifyGameCompleted(): void {
+    const g = this.game();
+    if (!g) return;
+    const currentScore = this.score();
+    const previousBest = this.storageService.getProgress(g.id)?.highScore ?? 0;
+    const isNewHighScore = currentScore > previousBest;
+    this.persistProgress();
+    this.supportPrompt.recordGameCompletion(currentScore, isNewHighScore);
   }
 
   private persistProgress(savedState?: Record<string, any>): void {

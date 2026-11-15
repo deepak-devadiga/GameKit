@@ -114,4 +114,94 @@
       <span class="footer-security"> 🛡️ HMAC Checksum Protected • Zero-Install HTML5 Engines </span>
     </div>
   </footer>
+
+  <!-- Floating "Buy Me a Coffee" FAB Button (Bottom Right) -->
+  <a
+    [href]="supportService.supportUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="bmc-fab"
+    aria-label="Buy Me a Coffee"
+    (click)="supportService.onSupportClicked()"
+  >
+    <span class="bmc-icon-wrap" aria-hidden="true">
+      <svg class="bmc-mug-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M17 8H19C20.6569 8 22 9.34315 22 11C22 12.6569 20.6569 14 19 14H17V16C17 18.7614 14.7614 21 12 21H8C5.23858 21 3 18.7614 3 16V8C3 7.44772 3.44772 7 4 7H16C16.5523 7 17 7.44772 17 8Z"
+          fill="currentColor"
+        />
+        <path
+          d="M17 10V12H19C19.5523 12 20 11.5523 20 11C20 10.4477 19.5523 10 19 10H17Z"
+          fill="#09111E"
+        />
+        <path
+          d="M7 3C7 3 8 4 7 5.5M10.5 2.5C10.5 2.5 11.5 3.5 10.5 5M14 3C14 3 15 4 14 5.5"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+    <span class="bmc-text">Buy Me a Coffee</span>
+  </a>
+
+  <!-- Smart Post-Game Support Modal -->
+  @if (supportService.showModal()) {
+    <div
+      class="bmc-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bmc-modal-title"
+      (click)="supportService.dismissLater()"
+    >
+      <div class="bmc-modal-card" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          class="bmc-close-btn"
+          aria-label="Close modal"
+          (click)="supportService.dismissLater()"
+        >
+          ✕
+        </button>
+
+        <div class="bmc-modal-badge">
+          @if (supportService.modalReason() === 'highscore') {
+            🏆 NEW PERSONAL RECORD • {{ supportService.latestScore() }} PTS!
+          } @else {
+            ⚡ ARCADE MILESTONE UNLOCKED
+          }
+        </div>
+
+        <div class="bmc-modal-mug" aria-hidden="true">☕</div>
+
+        <h2 id="bmc-modal-title">Enjoying GameKit Arcade?</h2>
+        <p>
+          GameKit is 100% free, ad-free, and zero-install. If you're having fun crushing high
+          scores, consider fueling future mini-games with a coffee!
+        </p>
+
+        <div class="bmc-modal-actions">
+          <a
+            [href]="supportService.supportUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bmc-cta-btn"
+            (click)="supportService.onSupportClicked()"
+          >
+            <span>☕</span>
+            <span>Buy Me a Coffee</span>
+          </a>
+
+          <div class="bmc-secondary-actions">
+            <button type="button" class="btn-later" (click)="supportService.dismissLater()">
+              Continue Playing
+            </button>
+            <button type="button" class="btn-snooze" (click)="supportService.snoozeForToday()">
+              Don't ask today
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>

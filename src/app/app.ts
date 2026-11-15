@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { ConfigService } from './core/services/config.service';
-import { StorageAuthService } from './core/services/storage-auth.service';
-import { ThemeService } from './core/services/theme.service';
-import { SoundService } from './core/services/sound.service';
+import { ConfigService } from './services/config.service';
+import { StorageAuthService } from './services/storage-auth.service';
+import { ThemeService } from './services/theme.service';
+import { SoundService } from './services/sound.service';
+import { SupportPromptService } from './services/support-prompt.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class App {
   protected readonly authStorage = inject(StorageAuthService);
   protected readonly themeService = inject(ThemeService);
   protected readonly soundService = inject(SoundService);
+  protected readonly supportService = inject(SupportPromptService);
 
   protected readonly menus = this.configService.menus;
   protected readonly totalHighScore = this.authStorage.totalHighScore;
