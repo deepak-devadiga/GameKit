@@ -65,12 +65,21 @@
 .difficulty-pills {
   display: flex;
   overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   max-width: 100%;
   background: var(--gk-bg-input);
   padding: 0.28rem;
   border-radius: 12px;
   border: 1px solid var(--gk-border);
   gap: 0.25rem;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .diff-pill {
     background: transparent;
@@ -82,8 +91,9 @@
     font-size: 0.8rem;
     font-weight: 700;
     white-space: nowrap;
+    scroll-snap-align: start;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 
     &.active {
       background: var(--gk-tertiary);
@@ -127,7 +137,6 @@
   position: relative;
   overflow: hidden;
   background: var(--gk-bg-card);
-  backdrop-filter: blur(12px);
   border: 1px solid var(--gk-border);
   border-radius: 18px;
   padding: clamp(1.1rem, 2vw, 1.4rem);
@@ -135,10 +144,14 @@
   flex-direction: column;
   justify-content: space-between;
   box-shadow: var(--gk-shadow);
+  /* Off-screen rendering optimization for buttery 120fps scrolling */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 215px;
+  transform: translate3d(0, 0, 0);
   transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.22s ease,
+    box-shadow 0.26s ease;
 
   .card-glow-bar {
     position: absolute;
@@ -171,7 +184,7 @@
 
   @media (hover: hover) {
     &:hover {
-      transform: translateY(-5px);
+      transform: translate3d(0, -5px, 0);
       border-color: var(--gk-primary);
       box-shadow: 0 16px 36px -10px var(--gk-primary-glow);
     }
@@ -263,16 +276,20 @@
   border-radius: 10px;
   font-weight: 800;
   font-size: 0.84rem;
-  transition: all 0.18s ease;
+  transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
     background: var(--gk-secondary);
     color: var(--gk-white);
   }
+
+  &:active {
+    transform: scale(0.96);
+  }
 }
 
 .card-skeleton {
-  height: 210px;
+  height: 215px;
   border-radius: 18px;
   background: var(--gk-bg-card);
   border: 1px solid var(--gk-border);
@@ -300,12 +317,17 @@
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 8px 20px var(--gk-tertiary-glow);
-  transition: all 0.18s ease;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
     background: var(--gk-primary);
     color: var(--gk-text-inverse);
     border-color: var(--gk-primary);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
   }
 }
 

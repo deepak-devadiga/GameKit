@@ -79,13 +79,26 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
   font-family:
     'Plus Jakarta Sans',
     'Inter',
@@ -93,16 +106,28 @@ body {
     -apple-system,
     sans-serif;
   background-color: var(--gk-bg-base);
-  background-image:
-    radial-gradient(circle at 12% 10%, var(--gk-tertiary-glow), transparent 36%),
-    radial-gradient(circle at 88% 14%, var(--gk-secondary-glow), transparent 32%),
-    radial-gradient(circle at 50% 92%, var(--gk-accent-glow), transparent 38%);
-  background-attachment: fixed;
   color: var(--gk-text-main);
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+/* GPU-Composited Ambient Background (Zero Scroll Repaint Cost) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12% 10%, var(--gk-tertiary-glow), transparent 36%),
+    radial-gradient(circle at 88% 14%, var(--gk-secondary-glow), transparent 32%),
+    radial-gradient(circle at 50% 92%, var(--gk-accent-glow), transparent 38%);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 button,
@@ -112,17 +137,25 @@ input {
   touch-action: manipulation;
 }
 
+/* Native App-Like View Transition Crossfade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Custom Slim App Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--gk-bg-base);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gk-tertiary);
+  background: rgba(34, 116, 165, 0.55);
   border-radius: 999px;
 }
 

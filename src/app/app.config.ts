@@ -2,30 +2,35 @@ import {
   ApplicationConfig,
   inject,
   provideAppInitializer,
-  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import {
-  PreloadAllModules,
   provideRouter,
   withComponentInputBinding,
   withInMemoryScrolling,
-  withPreloading,
+  withViewTransitions,
 } from '@angular/router';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { securityHeadersInterceptor } from './core/services/security.service';
 import { ConfigService } from './core/services/config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withFetch(), withInterceptors([securityHeadersInterceptor])),
-    provideAppInitializer(() => inject(ConfigService).loadBootstrapConfig()),
+    provideZonelessChangeDetection(),
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
+      withViewTransitions(),
     ),
+    provideHttpClient(withInterceptors([securityHeadersInterceptor])),
+    provideAppInitializer(() => {
+      const configService = inject(ConfigService);
+      return configService.loadBootstrapConfig();
+    }),
   ],
 };

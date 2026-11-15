@@ -12,11 +12,13 @@
   top: 0;
   z-index: 100;
   background: var(--gk-bg-glass);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--gk-border);
   padding: 0.75rem var(--gk-pad-page);
   box-shadow: var(--gk-shadow);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .topbar-main {
@@ -82,7 +84,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  transition: all 0.18s ease;
+  scroll-snap-align: start;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
     color: var(--gk-text-main);
@@ -243,7 +246,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.85rem;
-    padding-right: 4rem; /* Prevents FAB overlap on wide screens */
+    padding-right: 4rem;
   }
 
   strong {
@@ -308,6 +311,7 @@
   text-decoration: none;
   overflow: hidden;
   cursor: pointer;
+  transform: translateZ(0);
   transition:
     max-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
     padding-right 0.42s cubic-bezier(0.22, 1, 0.36, 1),
@@ -350,7 +354,7 @@
   &:focus-visible {
     max-width: 235px;
     padding-right: 1.25rem;
-    transform: translateY(-3px);
+    transform: translate3d(0, -3px, 0);
     box-shadow:
       0 14px 32px rgba(255, 191, 0, 0.52),
       0 6px 16px rgba(232, 63, 111, 0.35);
@@ -367,7 +371,7 @@
   }
 
   &:active {
-    transform: translateY(-1px) scale(0.98);
+    transform: translate3d(0, -1px, 0) scale(0.98);
   }
 }
 
@@ -562,6 +566,10 @@
   .mobile-nav-drawer {
     display: flex;
     overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     gap: 0.4rem;
     margin-top: 0.65rem;
     padding: 0.3rem;
