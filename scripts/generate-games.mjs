@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 // Pass count per category via CLI: `node scripts/generate-games.mjs 500` (500 * 5 = 2,500 games)
 // Defaults to 200 per category = 1,000 games total
 const GAMES_PER_CATEGORY = Number(process.argv[2]) || 200;
-const BASE_URL = 'https://deepak-devadiga.github.io/gamekit';
+const BASE_URL = 'https://deepak-devadiga.github.io/GameKit';
 
 const PALETTE = [
   '#00f5d4',

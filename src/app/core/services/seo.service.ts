@@ -11,9 +11,9 @@ export class SeoService {
   private readonly doc = inject(DOCUMENT);
   private readonly configService = inject(ConfigService);
 
-  private readonly defaultBaseUrl = 'https://deepak-devadiga.github.io/gamekit';
+  private readonly defaultBaseUrl = 'https://deepak-devadiga.github.io/GameKit';
   private readonly defaultOgImage =
-    'https://deepak-devadiga.github.io/gamekit/assets/og-banner.png';
+    'https://deepak-devadiga.github.io/GameKit/assets/og-banner.png';
 
   setCategorySeo(category: string, gameCount: number): void {
     const formattedCat = category === 'all' ? 'All Instant' : category.toUpperCase();
