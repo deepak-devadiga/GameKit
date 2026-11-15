@@ -28,8 +28,8 @@ export class GamePlayerComponent implements OnDestroy {
   private readonly configService = inject(ConfigService);
   private readonly storageService = inject(StorageAuthService);
   private readonly seoService = inject(SeoService);
-  protected readonly soundService = inject(SoundService);
   private readonly supportPrompt = inject(SupportPromptService);
+  protected readonly soundService = inject(SoundService);
 
   readonly arcadeCanvas = viewChild<ElementRef<HTMLCanvasElement>>('arcadeCanvas');
 
@@ -132,7 +132,7 @@ export class GamePlayerComponent implements OnDestroy {
     }
   }
 
-  // ---------------- ARCADE ENGINE (Themed with #FFBF00, #E83F6F, #32936F, #2274A5) ----------------
+  // ---------------- ARCADE ENGINE ----------------
   private startArcadeLoop(cfg: Record<string, any>): void {
     const mode = cfg['mode'] ?? 'snake';
     this.dir = { x: 1, y: 0 };
@@ -152,7 +152,6 @@ export class GamePlayerComponent implements OnDestroy {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Deep Cerulean Night Canvas
       ctx.fillStyle = '#09111E';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -183,11 +182,9 @@ export class GamePlayerComponent implements OnDestroy {
         } else {
           this.snake.pop();
         }
-        // Electric Rose Target (#E83F6F)
         ctx.fillStyle = '#E83F6F';
         ctx.fillRect(this.food.x * 20 + 2, this.food.y * 20 + 2, 16, 16);
 
-        // Amber Gold Head (#FFBF00) & Emerald Jade Trail (#32936F)
         this.snake.forEach((part, idx) => {
           ctx.fillStyle = idx === 0 ? '#FFBF00' : '#32936F';
           ctx.fillRect(part.x * 20 + 1, part.y * 20 + 1, 18, 18);
@@ -201,11 +198,9 @@ export class GamePlayerComponent implements OnDestroy {
             vy: Number(cfg['speed'] ?? 5),
           });
         }
-        // Emerald Jade Paddle (#32936F)
         ctx.fillStyle = '#32936F';
         ctx.fillRect(this.playerX, 330, 56, 14);
 
-        // Amber Gold Orbs (#FFBF00)
         ctx.fillStyle = '#FFBF00';
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
           const ob = this.obstacles[i];
@@ -323,6 +318,13 @@ export class GamePlayerComponent implements OnDestroy {
         this.puzzleCells.set(cells);
         this.soundService.play('move');
         this.addScore(5);
+
+        const solved = cells.slice(0, -1).every((val, i) => val === i + 1);
+        if (solved) {
+          this.soundService.play('victory');
+          this.addScore(250);
+          this.notifyGameCompleted();
+        }
       } else {
         this.soundService.play('error');
       }
@@ -446,6 +448,7 @@ export class GamePlayerComponent implements OnDestroy {
       this.boardStatus.set('Victory! +100 pts');
       this.soundService.play('victory');
       this.addScore(100);
+      this.notifyGameCompleted();
       setTimeout(() => this.tttBoard.set(Array(9).fill('')), 900);
       return;
     }
@@ -457,12 +460,14 @@ export class GamePlayerComponent implements OnDestroy {
       if (this.checkTttWin(board, symbols[1])) {
         this.boardStatus.set('AI Wins! Round Resetting...');
         this.soundService.play('error');
+        this.notifyGameCompleted();
         setTimeout(() => this.tttBoard.set(Array(9).fill('')), 900);
       }
     } else {
       this.boardStatus.set('Draw! +25 pts');
       this.soundService.play('pickup');
       this.addScore(25);
+      this.notifyGameCompleted();
       setTimeout(() => this.tttBoard.set(Array(9).fill('')), 900);
     }
     this.tttBoard.set(board);
@@ -524,6 +529,7 @@ export class GamePlayerComponent implements OnDestroy {
     } else {
       this.soundService.play('error');
       this.boardStatus.set(`Missed! Card was ${next}`);
+      this.notifyGameCompleted();
     }
   }
 
@@ -546,18 +552,15 @@ export class GamePlayerComponent implements OnDestroy {
       this.idleUnits.update((u) => u + 1);
       this.soundService.play('upgrade');
       this.persistProgress({ units: this.idleUnits() });
+      if (this.idleUnits() % 5 === 0) {
+        this.notifyGameCompleted();
+      }
     } else {
       this.soundService.play('error');
     }
   }
 
-  // ---------------- PERSISTENCE ----------------
-  private addScore(points: number, savedState?: Record<string, any>): void {
-    const next = this.score() + points;
-    this.score.set(next);
-    this.persistProgress(savedState);
-  }
-
+  // ---------------- PERSISTENCE & COMPLETION HOOK ----------------
   private notifyGameCompleted(): void {
     const g = this.game();
     if (!g) return;
@@ -566,6 +569,12 @@ export class GamePlayerComponent implements OnDestroy {
     const isNewHighScore = currentScore > previousBest;
     this.persistProgress();
     this.supportPrompt.recordGameCompletion(currentScore, isNewHighScore);
+  }
+
+  private addScore(points: number, savedState?: Record<string, any>): void {
+    const next = this.score() + points;
+    this.score.set(next);
+    this.persistProgress(savedState);
   }
 
   private persistProgress(savedState?: Record<string, any>): void {

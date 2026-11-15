@@ -23,28 +23,22 @@ export class SupportPromptService {
   private readonly minCooldownMs = 15 * 60 * 1000; // 15 minutes
   private readonly minGamesBetweenPrompts = 4;
 
-  /**
-   * Evaluates whether to show the 'Buy Me a Coffee' modal after a game round ends.
-   */
   recordGameCompletion(finalScore: number, isNewHighScore: boolean): void {
     const state = this.loadState();
     state.completions += 1;
 
     const now = Date.now();
 
-    // Gate 1: Respect active snooze window
     if (now < state.snoozeUntil) {
       this.saveState(state);
       return;
     }
 
-    // Gate 2: Honeymoon period — let the user enjoy at least 2 full games first
     if (state.completions < 3) {
       this.saveState(state);
       return;
     }
 
-    // Gate 3: Minimum time & games-played cooldown since last prompt
     const gamesSinceLastShow = state.completions - state.completionsAtLastShow;
     const timeSinceLastShow = now - state.lastShownAt;
 
@@ -56,7 +50,6 @@ export class SupportPromptService {
       return;
     }
 
-    // Gate 4: Trigger on Milestone round OR New High Score (> 50 pts)
     const isMilestone = this.milestones.has(state.completions) || state.completions % 25 === 0;
     const isQualifyingHighScore = isNewHighScore && finalScore >= 50;
 
@@ -68,9 +61,8 @@ export class SupportPromptService {
       this.latestScore.set(finalScore);
       this.modalReason.set(isQualifyingHighScore ? 'highscore' : 'milestone');
 
-      // Slight delay (450ms) so the player sees their final board/score before modal fades in
       setTimeout(() => {
-        this.soundService.play('Upgrade' as any);
+        this.soundService.play('upgrade');
         this.showModal.set(true);
       }, 450);
       return;
@@ -81,7 +73,6 @@ export class SupportPromptService {
 
   onSupportClicked(): void {
     const state = this.loadState();
-    // Snooze modal prompts for 14 days after clicking support
     state.snoozeUntil = Date.now() + 14 * 24 * 60 * 60 * 1000;
     this.saveState(state);
     this.showModal.set(false);
@@ -95,7 +86,7 @@ export class SupportPromptService {
   snoozeForToday(): void {
     this.soundService.play('click');
     const state = this.loadState();
-    state.snoozeUntil = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    state.snoozeUntil = Date.now() + 24 * 60 * 60 * 1000;
     this.saveState(state);
     this.showModal.set(false);
   }
@@ -107,7 +98,7 @@ export class SupportPromptService {
         return JSON.parse(raw) as SupportTelemetry;
       }
     } catch {
-      // Ignore storage errors in private browsing
+      // Ignore storage errors
     }
     return {
       completions: 0,
